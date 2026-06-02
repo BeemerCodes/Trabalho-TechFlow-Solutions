@@ -24,3 +24,9 @@ def create_task():
     db.session.add(task)
     db.session.commit()
     return jsonify({'id': task.id, 'title': task.title, 'status': task.status}), 201
+
+@app.route('/tasks', methods=['GET'])
+def list_tasks():
+    tasks = Task.query.all()
+    return jsonify([{'id': t.id, 'title': t.title, 'status': t.status} for t in tasks]), 200
+
