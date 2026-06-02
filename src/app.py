@@ -51,3 +51,14 @@ def delete_task(task_id):
     db.session.delete(task)
     db.session.commit()
     return '', 204
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Recurso nao encontrado"}), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    return jsonify({"error": "Erro interno do servidor"}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
