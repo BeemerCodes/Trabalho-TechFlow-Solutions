@@ -13,9 +13,10 @@ def client():
             db.drop_all()
 
 def test_create_task_success(client):
-    response = client.post('/tasks', json={'title': 'Configurar servidor'})
+    response = client.post('/tasks', json={'title': 'Configurar servidor', 'priority': True})
     assert response.status_code == 201
     assert response.get_json()['title'] == 'Configurar servidor'
+    assert response.get_json()['priority'] is True
 
 def test_create_task_missing_title(client):
     response = client.post('/tasks', json={'status': 'Em Progresso'})

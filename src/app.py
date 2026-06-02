@@ -10,9 +10,18 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     status = db.Column(db.String(30), default='A Fazer')
+    priority = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Recurso nao encontrado"}), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    return jsonify({"error": "Erro interno do servidor"}), 500
 
 @app.route('/tasks', methods=['POST'])
 def create_task():
@@ -20,15 +29,30 @@ def create_task():
     if not data or 'title' not in data:
         return jsonify({'error': 'Atributo "title" é obrigatório'}), 400
     
-    task = Task(title=data['title'], status=data.get('status', 'A Fazer'))
+    task = Task(
+        title=data['title'], 
+        status=data.get('status', 'A Fazer'),
+        priority=data.get('priority', False)
+    )
     db.session.add(task)
     db.session.commit()
-    return jsonify({'id': task.id, 'title': task.title, 'status': task.status}), 201
+    
+    return jsonify({
+        'id': task.id, 
+        'title': task.title, 
+        'status': task.status,
+        'priority': task.priority
+    }), 201
 
 @app.route('/tasks', methods=['GET'])
 def list_tasks():
     tasks = Task.query.all()
-    return jsonify([{'id': t.id, 'title': t.title, 'status': t.status} for t in tasks]), 200
+    return jsonify([{
+        'id': t.id, 
+        'title': t.title, 
+        'status': t.status,
+        'priority': t.priority
+    } for t in tasks]), 200
 
 @app.route('/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
@@ -39,8 +63,15 @@ def update_task(task_id):
     data = request.get_json()
     task.title = data.get('title', task.title)
     task.status = data.get('status', task.status)
+    task.priority = data.get('priority', task.priority)
     db.session.commit()
-    return jsonify({'id': task.id, 'title': task.title, 'status': task.status}), 200
+    
+    return jsonify({
+        'id': task.id, 
+        'title': task.title, 
+        'status': task.status,
+        'priority': task.priority
+    }), 200
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
@@ -51,14 +82,6 @@ def delete_task(task_id):
     db.session.delete(task)
     db.session.commit()
     return '', 204
-
-@app.errorhandler(404)
-def not_found(e):
-    return jsonify({"error": "Recurso nao encontrado"}), 404
-
-@app.errorhandler(500)
-def internal_error(e):
-    return jsonify({"error": "Erro interno do servidor"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
