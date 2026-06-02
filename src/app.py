@@ -30,3 +30,24 @@ def list_tasks():
     tasks = Task.query.all()
     return jsonify([{'id': t.id, 'title': t.title, 'status': t.status} for t in tasks]), 200
 
+@app.route('/tasks/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
+    task = db.session.get(Task, task_id)
+    if not task:
+        return jsonify({'error': 'Tarefa nao encontrada'}), 404
+    
+    data = request.get_json()
+    task.title = data.get('title', task.title)
+    task.status = data.get('status', task.status)
+    db.session.commit()
+    return jsonify({'id': task.id, 'title': task.title, 'status': task.status}), 200
+
+@app.route('/tasks/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    task = db.session.get(Task, task_id)
+    if not task:
+        return jsonify({'error': 'Tarefa nao encontrada'}), 404
+    
+    db.session.delete(task)
+    db.session.commit()
+    return '', 204
