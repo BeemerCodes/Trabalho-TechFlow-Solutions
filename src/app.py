@@ -13,3 +13,14 @@ class Task(db.Model):
 
 with app.app_context():
     db.create_all()
+
+@app.route('/tasks', methods=['POST'])
+def create_task():
+    data = request.get_json()
+    if not data or 'title' not in data:
+        return jsonify({'error': 'Atributo "title" é obrigatório'}), 400
+    
+    task = Task(title=data['title'], status=data.get('status', 'A Fazer'))
+    db.session.add(task)
+    db.session.commit()
+    return jsonify({'id': task.id, 'title': task.title, 'status': task.status}), 201
