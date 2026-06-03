@@ -51,7 +51,7 @@ A estrutura do projeto foi concebida sob os pilares das metodologias ágeis e me
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **HTML5, CSS3 & Vanilla JS** - Frontend para o painel Kanban, focado em performance sem dependências externas.
+- **[HTML5](https://developer.mozilla.org/pt-BR/docs/Web/HTML), [CSS3](https://developer.mozilla.org/pt-BR/docs/Web/CSS) & [Vanilla JS](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)** - Frontend para o painel Kanban, focado em performance sem dependências externas.
 - **[Python](https://www.python.org/)** - Base da aplicação.
 - **[Flask](https://flask.palletsprojects.com/)** - Framework web para construção da API e roteamento de templates.
 - **[Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/)** - ORM para a comunicação com o banco de dados.
