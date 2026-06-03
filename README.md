@@ -7,6 +7,9 @@
   
   <h1>TechFlow Solutions - Task Manager API</h1>
   <p>Uma API RESTful elegante e ágil para gerenciamento de fluxo de trabalho.</p>
+  
+  <br>
+  <img src="img/front%20finalizado.png" alt="Interface do Painel Kanban TechFlow" width="100%" style="border-radius: 8px;">
 </div>
 
 ---
@@ -94,13 +97,15 @@ A aplicação é multiplataforma. Siga as instruções abaixo para rodar a API l
    ```
 
 4. **Inicie a Aplicação**
+
    ```bash
    python src/app.py
    ```
-   O servidor iniciará em `http://127.0.0.1:5000/`. 
-   
-   🎉 **Acesse esse link no seu navegador** para visualizar e interagir com o **Painel Kanban (Frontend)**! 
-   *(O banco de dados `tasks.db` será auto-gerado no primeiro acesso).*
+
+   O servidor iniciará em `http://127.0.0.1:5000/`.
+
+   🎉 **Acesse esse link no seu navegador** para visualizar e interagir com o **Painel**!
+   _(O banco de dados `tasks.db` será auto-gerado no primeiro acesso)._
 
 ---
 
