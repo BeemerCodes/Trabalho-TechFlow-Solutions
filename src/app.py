@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -22,6 +22,10 @@ def not_found(e):
 @app.errorhandler(500)
 def internal_error(e):
     return jsonify({"error": "Erro interno do servidor"}), 500
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/tasks', methods=['POST'])
 def create_task():

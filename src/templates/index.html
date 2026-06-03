@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechFlow - Kanban</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0A0A0A;
+            --bg-surface: #141414;
+            --border-color: #262626;
+            --text-primary: #FAFAFA;
+            --text-secondary: #A3A3A3;
+            --accent: #FFFFFF;
+            --accent-fg: #000000;
+            --danger: #EF4444;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 2rem 0;
+            margin: 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-badge {
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Form Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            background: var(--bg-surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            background: var(--bg-base);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #525252;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-base);
+            cursor: pointer;
+            user-select: none;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+
+        .checkbox-wrapper:hover {
+            border-color: #525252;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--bg-surface);
+            border-color: #525252;
+        }
+
+        button.primary {
+            background-color: var(--accent);
+            color: var(--accent-fg);
+            border: 1px solid var(--accent);
+        }
+
+        button.primary:hover {
+            background-color: #E5E5E5;
+            border-color: #E5E5E5;
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .column-header {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .count-badge {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-height: 150px;
+        }
+
+        .task-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: #525252;
+        }
+
+        .task-card.priority {
+            border-left: 3px solid var(--danger);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .task-title {
+            font-size: 0.95rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .priority-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+            border-color: #525252;
+            background: var(--bg-surface);
+        }
+
+        .icon-btn.delete {
+            flex: 0 0 auto;
+            color: #EF4444;
+            border-color: transparent;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+        
+        .icon-btn.delete:hover {
+            background: transparent;
+            color: #FCA5A5;
+        }
+
+        .empty-state {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 2rem 0;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius);
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent);
+            color: var(--accent-fg);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #toast.error {
+            background: var(--danger);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <span class="brand-badge">TECHFLOW</span>
+            <h1>Gerenciador Logístico</h1>
+            <div class="subtitle">Acompanhe o fluxo de tarefas e prioridades em tempo real.</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Formulation -->
+        <form class="controls" id="add-task-form">
+            <div class="input-group">
+                <label for="task-title">Descrição da Tarefa</label>
+                <input type="text" id="task-title" placeholder="Ex: Despachar lote A1..." required>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="task-priority">
+                    Prioridade Alta
+                </label>
+                <button type="submit" class="primary">Adicionar Tarefa</button>
+            </div>
+        </form>
+
+        <!-- Kanban Board -->
+        <div class="kanban-board">
+            <!-- Column 1 -->
+            <div class="column">
+                <div class="column-header">
+                    A Fazer <span class="count-badge" id="count-todo">0</span>
+                </div>
+                <div class="task-list" id="list-todo"></div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="column">
+                <div class="column-header">
+                    Em Progresso <span class="count-badge" id="count-progress">0</span>
+                </div>
+                <div class="task-list" id="list-progress"></div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="column">
+                <div class="column-header">
+                    Concluído <span class="count-badge" id="count-done">0</span>
+                </div>
+                <div class="task-list" id="list-done"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Notificação</div>
+
+    <script>
+        const API_URL = '/tasks';
+
+        const form = document.getElementById('add-task-form');
+        const titleInput = document.getElementById('task-title');
+        const priorityInput = document.getElementById('task-priority');
+        const lists = {
+            'A Fazer': document.getElementById('list-todo'),
+            'Em Progresso': document.getElementById('list-progress'),
+            'Concluído': document.getElementById('list-done')
+        };
+        const counts = {
+            'A Fazer': document.getElementById('count-todo'),
+            'Em Progresso': document.getElementById('count-progress'),
+            'Concluído': document.getElementById('count-done')
+        };
+        const toast = document.getElementById('toast');
+
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.className = isError ? 'error show' : 'show';
+            setTimeout(() => toast.className = '', 3000);
+        }
+
+        async function fetchTasks() {
+            try {
+                const res = await fetch(API_URL);
+                const tasks = await res.json();
+                renderTasks(tasks);
+            } catch (err) {
+                showToast('Erro de conexão com a API', true);
+            }
+        }
+
+        function renderTasks(tasks) {
+            Object.values(lists).forEach(list => list.innerHTML = '');
+            const stats = {'A Fazer': 0, 'Em Progresso': 0, 'Concluído': 0};
+
+            if (tasks.length === 0) {
+                lists['A Fazer'].innerHTML = '<div class="empty-state">Sem tarefas ativas</div>';
+            } else {
+                tasks.forEach(task => {
+                    if (lists[task.status]) {
+                        lists[task.status].appendChild(createTaskCard(task));
+                        stats[task.status]++;
+                    }
+                });
+            }
+
+            Object.keys(stats).forEach(status => {
+                if(counts[status]) counts[status].textContent = stats[status];
+            });
+        }
+
+        function createTaskCard(task) {
+            const div = document.createElement('div');
+            div.className = `task-card ${task.priority ? 'priority' : ''}`;
+            
+            let actionHtml = '';
+            if (task.status === 'A Fazer') {
+                actionHtml = `<button type="button" class="icon-btn" onclick="updateTask(${task.id}, 'Em Progresso')">Iniciar</button>`;
+            } else if (task.status === 'Em Progresso') {
+                actionHtml = `
+                    <button type="button" class="icon-btn" onclick="updateTask(${task.id}, 'A Fazer')">Voltar</button>
+                    <button type="button" class="icon-btn" onclick="updateTask(${task.id}, 'Concluído')" style="color: var(--text-primary); border-color: #525252;">Concluir</button>
+                `;
+            } else if (task.status === 'Concluído') {
+                actionHtml = `<button type="button" class="icon-btn" onclick="updateTask(${task.id}, 'Em Progresso')">Retomar</button>`;
+            }
+
+            div.innerHTML = `
+                <div class="task-header">
+                    <h3 class="task-title">${task.title}</h3>
+                    ${task.priority ? '<div class="priority-dot" title="Prioridade Alta"></div>' : ''}
+                </div>
+                <div class="task-actions">
+                    <div class="action-btns">
+                        ${actionHtml}
+                        <button type="button" class="icon-btn delete" onclick="deleteTask(${task.id})" title="Excluir">✕</button>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                title: titleInput.value,
+                priority: priorityInput.checked,
+                status: 'A Fazer'
+            };
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (res.ok) {
+                    titleInput.value = '';
+                    priorityInput.checked = false;
+                    fetchTasks();
+                    showToast('Tarefa salva');
+                } else {
+                    const data = await res.json();
+                    showToast(data.error || 'Erro', true);
+                }
+            } catch (err) {
+                showToast('Erro de conexão', true);
+            }
+        });
+
+        window.updateTask = async (id, newStatus) => {
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (res.ok) fetchTasks();
+            } catch (err) {
+                showToast('Erro ao atualizar', true);
+            }
+        };
+
+        window.deleteTask = async (id) => {
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    fetchTasks();
+                }
+            } catch (err) {
+                showToast('Erro ao remover', true);
+            }
+        };
+
+        fetchTasks();
+    </script>
+</body>
+</html>
