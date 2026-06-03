@@ -36,19 +36,21 @@ A estrutura do projeto foi concebida sob os pilares das metodologias ágeis e me
 
 ---
 
-## ✨ Funcionalidades (Core CRUD)
+## ✨ Funcionalidades
 
-- **Criação de Tarefas**: Registre novas demandas operacionais definindo título, status atual e definindo se é uma prioridade alta (`priority: true`).
-- **Acompanhamento (Leitura)**: Consulte a lista integral de atividades ativas.
-- **Transição de Status (Atualização)**: Atualize tarefas, movendo o status de "A Fazer" para "Em Progresso" ou "Concluído" à medida que a equipe logística trabalha.
-- **Exclusão**: Remova registros duplicados ou cancelados.
+- **Painel Kanban Interativo (Frontend)**: Interface gráfica moderna, responsiva e minimalista (tema Dark Mode) para visualização e gestão ágil do fluxo de trabalho.
+- **Criação de Tarefas**: Registre novas demandas operacionais definindo título, status atual e se é uma prioridade alta (`priority: true`).
+- **Acompanhamento (Leitura)**: Consulte a lista integral de atividades ativas de forma visual.
+- **Transição de Status (Atualização)**: Atualize tarefas com um clique, movendo de "A Fazer" para "Em Progresso" ou "Concluído".
+- **Exclusão**: Remova registros de forma simples pelo painel ou API.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
+- **HTML5, CSS3 & Vanilla JS** - Frontend para o painel Kanban, focado em performance sem dependências externas.
 - **[Python](https://www.python.org/)** - Base da aplicação.
-- **[Flask](https://flask.palletsprojects.com/)** - Framework web para construção da API.
+- **[Flask](https://flask.palletsprojects.com/)** - Framework web para construção da API e roteamento de templates.
 - **[Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/)** - ORM para a comunicação com o banco de dados.
 - **[SQLite](https://www.sqlite.org/index.html)** - Banco de dados embutido.
 - **[Pytest](https://docs.pytest.org/) & [GitHub Actions](https://github.com/features/actions)** - Qualidade de código e testes automatizados.
@@ -95,7 +97,10 @@ A aplicação é multiplataforma. Siga as instruções abaixo para rodar a API l
    ```bash
    python src/app.py
    ```
-   A API estará operando em `http://127.0.0.1:5000/`. O banco de dados (`tasks.db`) será auto-gerado no primeiro acesso na pasta `instance/`.
+   O servidor iniciará em `http://127.0.0.1:5000/`. 
+   
+   🎉 **Acesse esse link no seu navegador** para visualizar e interagir com o **Painel Kanban (Frontend)**! 
+   *(O banco de dados `tasks.db` será auto-gerado no primeiro acesso).*
 
 ---
 
@@ -188,8 +193,10 @@ _Esses testes também rodam automaticamente a cada push via GitHub Actions._
 Trabalho-TechFlow-Solutions/
 ├── .github/workflows/      # Pipelines de CI/CD (GitHub Actions)
 ├── instance/               # Banco de Dados SQLite (auto-gerado)
-├── src/                    # Código fonte da API
-│   └── app.py              # Lógica central e roteamento
+├── src/                    # Código fonte da aplicação
+│   ├── templates/          # Arquivos de visualização HTML (Frontend Kanban)
+│   │   └── index.html      # Interface gráfica do painel
+│   └── app.py              # Lógica central da API e roteamento
 ├── tests/                  # Diretório de testes automatizados
 │   └── test_api.py         # Validações dos endpoints
 ├── .gitignore              # Ignora arquivos desnecessários no versionamento
