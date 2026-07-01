@@ -46,7 +46,7 @@ def create_task():
         'title': task.title, 
         'status': task.status,
         'priority': task.priority
-    }), 201
+    }), 200
 
 @app.route('/tasks', methods=['GET'])
 def list_tasks():
